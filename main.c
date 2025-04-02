@@ -38,11 +38,6 @@ int main() {
   assert(vec->data.v_vector3.y->data.v_int == 2);
   assert(vec->data.v_vector3.z->data.v_int == 3);
 
-  free(x);
-  free(y);
-  free(z);
-  free(vec);
-
   object_t *arr = new_array(2);
   assert(arr->type == ARRAY);
   assert(arr->data.v_array.capacity == 2);
@@ -58,6 +53,11 @@ int main() {
 
   assert(get1 == x);
   assert(get2 == z);
+
+  assert(length(arr) == 2);
+
+  object_t *add_ints = add(get1, get2);
+  assert(add_ints->data.v_int == 4);
 
   free(arr->data.v_array.data);
   free(arr);
