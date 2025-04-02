@@ -33,8 +33,7 @@ int main() {
 
   assert(s->ptr == 0);
 
-  free(s->data);
-  free(s);
+  free_stack(s);
 
   return 0;
 }
