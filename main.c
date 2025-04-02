@@ -11,18 +11,27 @@ int main() {
   stack_tt *s = new_stack(size);
   assert(s->capacity == size);
 
-  int eww = 69;
+  int one = 69;
+  int two = 420;
+  int three = 80085;
 
-  push(s, &eww);
-  push(s, &eww);
+  push(s, &one);
+  push(s, &two);
+  push(s, &three);
 
-  assert(s->capacity == 2);
-  assert(s->ptr == 2);
+  assert(s->capacity == size * 2);
+  assert(s->ptr == size + 1);
 
-  push(s, &eww);
+  int *poppy = pop(s);
+  assert(*poppy == three);
 
-  assert(s->capacity == 4);
-  assert(s->ptr == 3);
+  poppy = pop(s);
+  assert(*poppy == two);
+
+  poppy = pop(s);
+  assert(*poppy == one);
+
+  assert(s->ptr == 0);
 
   free(s->data);
   free(s);
