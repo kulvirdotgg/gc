@@ -31,6 +31,8 @@ typedef union ObjectData {
 } object_data_t;
 
 typedef struct Object {
+  int ref_count;
+
   object_type_t type;
   object_data_t data;
 } object_t;
@@ -44,3 +46,7 @@ bool set_array(object_t *array, size_t index, object_t *value);
 object_t *get_array(object_t *array, size_t index);
 size_t length(object_t *object);
 object_t *add(object_t *a, object_t *b);
+
+void ref_count_incr(object_t *obj);
+void ref_count_decr(object_t *obj);
+void ref_count_free(object_t *obj);

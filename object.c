@@ -1,15 +1,77 @@
 #include "object.h"
 #include <stdbool.h>
 #include <stdio.h>
+#include <stdlib.h>
 #include <string.h>
 
-object_t *new_array(size_t capacity) {
+object_t *_create_object() {
   object_t *obj = malloc(sizeof(object_t));
   if (obj == NULL) {
     fprintf(stderr, "FAILED TO CREATE NEW OBJECT\n");
     return NULL;
   }
 
+  obj->ref_count = 1;
+
+  return obj;
+}
+
+void ref_count_incr(object_t *obj) {
+  if (obj == NULL) {
+    fprintf(stderr, "OBJECT NULL FOR REF COUNT INCR");
+    return;
+  }
+  obj->ref_count++;
+}
+
+void ref_count_decr(object_t *obj) {
+  if (obj == NULL) {
+    fprintf(stderr, "OBJECT NULL FOR REF COUNT DECR");
+    return;
+  }
+  obj->ref_count--;
+
+  if (obj->ref_count == 0) {
+    ref_count_free(obj);
+  }
+}
+
+void ref_count_free(object_t *obj) {
+  if (obj == NULL) {
+    fprintf(stderr, "OBJECT NULL");
+    return;
+  }
+
+  switch (obj->type) {
+  case INT:
+    break;
+  case FLOAT:
+    break;
+  case STRING: {
+    free(obj->data.v_string);
+    break;
+  }
+  case VECTOR3: {
+    ref_count_decr(obj->data.v_vector3.x);
+    ref_count_decr(obj->data.v_vector3.y);
+    ref_count_decr(obj->data.v_vector3.z);
+    break;
+  }
+  case ARRAY: {
+    array_t arr = obj->data.v_array;
+    for (size_t i = 0; i < arr.capacity; ++i) {
+      ref_count_decr(arr.data[i]);
+    }
+
+    free(obj->data.v_array.data);
+    break;
+  }
+  }
+  free(obj);
+}
+
+object_t *new_array(size_t capacity) {
+  object_t *obj = _create_object();
   obj->type = ARRAY;
 
   object_t **data = calloc(capacity, sizeof(object_t *));
@@ -42,6 +104,16 @@ bool set_array(object_t *array, size_t index, object_t *value) {
     return false;
   }
 
+  // totally makes sense to increase the ref count
+  // for using this value in array.
+  ref_count_incr(value);
+
+  // If there was existing value at that index
+  // since its no longer in user we will decr its ref_count
+  if (array->data.v_array.data[index] != NULL) {
+    ref_count_decr(array->data.v_array.data[index]);
+  }
+
   array->data.v_array.data[index] = value;
   return true;
 }
@@ -66,49 +138,30 @@ object_t *new_vector3(object_t *x, object_t *y, object_t *z) {
     return NULL;
   }
 
-  object_t *obj = malloc(sizeof(object_t));
-  if (obj == NULL) {
-    fprintf(stderr, "FAILED TO CREATE NEW OBJECT\n");
-    return NULL;
-  }
-
+  object_t *obj = _create_object();
   obj->type = VECTOR3;
   obj->data.v_vector3 = (vector_t){.x = x, .y = y, .z = z};
   return obj;
 }
 
 object_t *new_int(int value) {
-  object_t *obj = malloc(sizeof(object_t));
-  if (obj == NULL) {
-    fprintf(stderr, "FAILED TO CREATE NEW OBJECT\n");
-    return NULL;
-  }
-
+  object_t *obj = _create_object();
   obj->type = INT;
   obj->data.v_int = value;
   return obj;
 }
 
 object_t *new_float(float value) {
-  object_t *obj = malloc(sizeof(object_t));
-  if (obj == NULL) {
-    fprintf(stderr, "FAILED TO CREATE NEW OBJECT\n");
-    return NULL;
-  }
-
+  object_t *obj = _create_object();
   obj->type = FLOAT;
   obj->data.v_float = value;
   return obj;
 }
 
 object_t *new_string(char *value) {
-  object_t *obj = malloc(sizeof(object_t));
-  if (obj == NULL) {
-    fprintf(stderr, "FAILED TO CREATE NEW OBJECT\n");
-    return NULL;
-  }
-
+  object_t *obj = _create_object();
   obj->type = STRING;
+
   obj->data.v_string = (char *)malloc(strlen(value) + 1);
   if (obj->data.v_string == NULL) {
     fprintf(stderr, "FAILED TO ALLOCATE MEMORY FOR STRING\n");
