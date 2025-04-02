@@ -1,4 +1,4 @@
-#include "stack.c"
+#include "object.h"
 #include <assert.h>
 #include <stdio.h>
 #include <stdlib.h>
@@ -7,33 +7,23 @@
 int main() {
   printf("--- Main Function I am inside you ---\n");
 
-  size_t size = 2;
-  stack_tt *s = new_stack(size);
-  assert(s->capacity == size);
+  object_t *int_obj = new_int(69);
+  assert(int_obj->type == INT);
+  assert(int_obj->data.v_int == 69);
 
-  int one = 69;
-  int two = 420;
-  int three = 80085;
+  object_t *float_obj = new_float(69);
+  assert(float_obj->type == FLOAT);
+  assert(float_obj->data.v_float == 69);
 
-  push(s, &one);
-  push(s, &two);
-  push(s, &three);
+  char *wisom_quote = "iladies nuts on your face";
+  object_t *str_obj = new_string(wisom_quote);
 
-  assert(s->capacity == size * 2);
-  assert(s->ptr == size + 1);
+  assert(str_obj->data.v_string != wisom_quote);
+  assert(*str_obj->data.v_string == *wisom_quote);
+  printf("%s\n", str_obj->data.v_string);
 
-  int *poppy = pop(s);
-  assert(*poppy == three);
-
-  poppy = pop(s);
-  assert(*poppy == two);
-
-  poppy = pop(s);
-  assert(*poppy == one);
-
-  assert(s->ptr == 0);
-
-  free_stack(s);
+  object_t *vector = new_vector3(NULL, NULL, NULL);
+  assert(vector == NULL);
 
   return 0;
 }
