@@ -43,5 +43,24 @@ int main() {
   free(z);
   free(vec);
 
+  object_t *arr = new_array(2);
+  assert(arr->type == ARRAY);
+  assert(arr->data.v_array.capacity == 2);
+
+  assert(arr->data.v_array.data[0] == NULL);
+  assert(arr->data.v_array.data[1] == NULL);
+
+  set_array(arr, 0, x);
+  set_array(arr, 1, z);
+
+  object_t *get1 = get_array(arr, 0);
+  object_t *get2 = get_array(arr, 1);
+
+  assert(get1 == x);
+  assert(get2 == z);
+
+  free(arr->data.v_array.data);
+  free(arr);
+
   return 0;
 }
