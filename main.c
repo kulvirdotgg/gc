@@ -25,5 +25,23 @@ int main() {
   object_t *vector = new_vector3(NULL, NULL, NULL);
   assert(vector == NULL);
 
+  object_t *x = new_int(1);
+  object_t *y = new_int(2);
+  object_t *z = new_int(3);
+  object_t *vec = new_vector3(x, y, z);
+
+  assert(vec->data.v_vector3.x == x);
+  assert(vec->data.v_vector3.y == y);
+  assert(vec->data.v_vector3.z == z);
+
+  assert(vec->data.v_vector3.x->data.v_int == 1);
+  assert(vec->data.v_vector3.y->data.v_int == 2);
+  assert(vec->data.v_vector3.z->data.v_int == 3);
+
+  free(x);
+  free(y);
+  free(z);
+  free(vec);
+
   return 0;
 }
