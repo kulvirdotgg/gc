@@ -1,4 +1,3 @@
-#pragma once
 #include "object.h"
 #include <stdbool.h>
 #include <stdio.h>
@@ -7,7 +6,7 @@
 object_t *new_array(size_t capacity) {
   object_t *obj = malloc(sizeof(object_t));
   if (obj == NULL) {
-    fprintf(stderr, "FAILED TO CREATE NEW OBJECT");
+    fprintf(stderr, "FAILED TO CREATE NEW OBJECT\n");
     return NULL;
   }
 
@@ -15,7 +14,7 @@ object_t *new_array(size_t capacity) {
 
   object_t **data = calloc(capacity, sizeof(object_t *));
   if (data == NULL) {
-    fprintf(stderr, "FAILED TO ALLOCATE MEMORY FOR ARRAY");
+    fprintf(stderr, "FAILED TO ALLOCATE MEMORY FOR ARRAY\n");
     return NULL;
   }
 
@@ -29,17 +28,17 @@ object_t *new_array(size_t capacity) {
 
 bool set_array(object_t *array, size_t index, object_t *value) {
   if (array == NULL || value == NULL) {
-    fprintf(stderr, "ARRAY DOES NOT EXIST OR VALUE IS NULL");
+    fprintf(stderr, "ARRAY DOES NOT EXIST OR VALUE IS NULL\n");
     return false;
   }
 
   if (array->type != ARRAY) {
-    fprintf(stderr, "OBJECT IS NOT OF TYPE ARRAY");
+    fprintf(stderr, "OBJECT IS NOT OF TYPE ARRAY\n");
     return false;
   }
 
   if (array->data.v_array.capacity <= index) {
-    fprintf(stderr, "INDEX OUT OF BOUND");
+    fprintf(stderr, "INDEX OUT OF BOUND\n");
     return false;
   }
 
@@ -49,12 +48,12 @@ bool set_array(object_t *array, size_t index, object_t *value) {
 
 object_t *get_array(object_t *array, size_t index) {
   if (array == NULL) {
-    fprintf(stderr, "ARRAY DOES NOT EXIST");
+    fprintf(stderr, "ARRAY DOES NOT EXIST\n");
     return NULL;
   }
 
   if (array->data.v_array.capacity <= index) {
-    fprintf(stderr, "INDEX OUT OF BOUND");
+    fprintf(stderr, "INDEX OUT OF BOUND\n");
     return NULL;
   }
 
@@ -63,13 +62,13 @@ object_t *get_array(object_t *array, size_t index) {
 
 object_t *new_vector3(object_t *x, object_t *y, object_t *z) {
   if (x == NULL || y == NULL || z == NULL) {
-    fprintf(stderr, "INPUT COORDINATES ARE NULL");
+    fprintf(stderr, "INPUT COORDINATES ARE NULL\n");
     return NULL;
   }
 
   object_t *obj = malloc(sizeof(object_t));
   if (obj == NULL) {
-    fprintf(stderr, "FAILED TO CREATE NEW OBJECT");
+    fprintf(stderr, "FAILED TO CREATE NEW OBJECT\n");
     return NULL;
   }
 
@@ -81,7 +80,7 @@ object_t *new_vector3(object_t *x, object_t *y, object_t *z) {
 object_t *new_int(int value) {
   object_t *obj = malloc(sizeof(object_t));
   if (obj == NULL) {
-    fprintf(stderr, "FAILED TO CREATE NEW OBJECT");
+    fprintf(stderr, "FAILED TO CREATE NEW OBJECT\n");
     return NULL;
   }
 
@@ -93,7 +92,7 @@ object_t *new_int(int value) {
 object_t *new_float(float value) {
   object_t *obj = malloc(sizeof(object_t));
   if (obj == NULL) {
-    fprintf(stderr, "FAILED TO CREATE NEW OBJECT");
+    fprintf(stderr, "FAILED TO CREATE NEW OBJECT\n");
     return NULL;
   }
 
@@ -105,14 +104,14 @@ object_t *new_float(float value) {
 object_t *new_string(char *value) {
   object_t *obj = malloc(sizeof(object_t));
   if (obj == NULL) {
-    fprintf(stderr, "FAILED TO CREATE NEW OBJECT");
+    fprintf(stderr, "FAILED TO CREATE NEW OBJECT\n");
     return NULL;
   }
 
   obj->type = STRING;
   obj->data.v_string = (char *)malloc(strlen(value) + 1);
   if (obj->data.v_string == NULL) {
-    fprintf(stderr, "FAILED TO ALLOCATE MEMORY FOR STRING");
+    fprintf(stderr, "FAILED TO ALLOCATE MEMORY FOR STRING\n");
     return NULL;
   }
 
@@ -140,7 +139,7 @@ size_t length(object_t *object) {
 
 object_t *add(object_t *a, object_t *b) {
   if (a == NULL || b == NULL) {
-    fprintf(stderr, "OPERANDS ARE NULL CAN'T PERFORM ADDITION OPERATION");
+    fprintf(stderr, "OPERANDS ARE NULL CAN'T PERFORM ADDITION OPERATION\n");
   }
 
   switch (a->type) {
@@ -151,7 +150,7 @@ object_t *add(object_t *a, object_t *b) {
     case FLOAT:
       return new_float((float)a->data.v_int + b->data.v_float);
     default:
-      fprintf(stderr, "INCOMPATIBLE TYPES FOR ADD OPERATION");
+      fprintf(stderr, "INCOMPATIBLE TYPES FOR ADD OPERATION\n");
       return NULL;
     }
   }
@@ -162,14 +161,14 @@ object_t *add(object_t *a, object_t *b) {
     case FLOAT:
       return new_float(a->data.v_float + b->data.v_float);
     default:
-      fprintf(stderr, "INCOMPATIBLE TYPES FOR ADD OPERATION");
+      fprintf(stderr, "INCOMPATIBLE TYPES FOR ADD OPERATION\n");
       return NULL;
     }
   }
 
   case STRING: {
     if (b->type != STRING) {
-      fprintf(stderr, "TYPE INCOMPATIBLE WITH STRING");
+      fprintf(stderr, "TYPE INCOMPATIBLE WITH STRING\n");
       return NULL;
     }
 
@@ -194,7 +193,7 @@ object_t *add(object_t *a, object_t *b) {
   }
   case VECTOR3: {
     if (b->type != VECTOR3) {
-      fprintf(stderr, "TYPES INCOMPATIBLE FOR VECTOR ADDITION");
+      fprintf(stderr, "TYPES INCOMPATIBLE FOR VECTOR ADDITION\n");
       return NULL;
     }
 
@@ -204,7 +203,7 @@ object_t *add(object_t *a, object_t *b) {
   }
   case ARRAY: {
     if (b->type != ARRAY) {
-      fprintf(stderr, "TYPE INCOMPATIBLE WITH ARRAY");
+      fprintf(stderr, "TYPE INCOMPATIBLE WITH ARRAY\n");
       return NULL;
     }
 
