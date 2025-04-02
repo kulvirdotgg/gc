@@ -1,4 +1,5 @@
-#include "swap.c"
+#include "stack.c"
+#include <assert.h>
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
@@ -6,12 +7,25 @@
 int main() {
   printf("--- Main Function I am inside you ---\n");
 
-  char str1[] = "I am a string.";
-  char str2[] = "I am b string.";
+  size_t size = 2;
+  stack_tt *s = new_stack(size);
+  assert(s->capacity == size);
 
-  size_t size = strlen(str1) + 1;
-  swap(str1, str2, size);
-  printf("first: %s \nsecond: %s\n", str1, str2);
+  int eww = 69;
+
+  push(s, &eww);
+  push(s, &eww);
+
+  assert(s->capacity == 2);
+  assert(s->ptr == 2);
+
+  push(s, &eww);
+
+  assert(s->capacity == 4);
+  assert(s->ptr == 3);
+
+  free(s->data);
+  free(s);
 
   return 0;
 }
