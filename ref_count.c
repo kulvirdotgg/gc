@@ -31,4 +31,15 @@ void gc() {
 
   ref_count_decr(x);
   assert(x->ref_count == 1);
+
+  object_t *one = new_int(1);
+  object_t *arr = new_array(1);
+  set_array(arr, 0, one);
+  assert(one->ref_count == 2);
+
+  ref_count_decr(one);
+  ref_count_decr(one);
+
+  // Garbage value hence it means object is cleared
+  // printf("%p\n", one);
 }
