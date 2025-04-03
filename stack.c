@@ -1,12 +1,7 @@
 #pragma once
+#include "stack.h"
 #include <stdio.h>
 #include <stdlib.h>
-
-typedef struct Stack {
-  size_t ptr;
-  size_t capacity;
-  void **data;
-} stack_tt;
 
 stack_tt *new_stack(size_t capacity) {
   stack_tt *st = malloc(sizeof(stack_tt));
