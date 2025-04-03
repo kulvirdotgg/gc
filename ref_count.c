@@ -19,4 +19,16 @@ void gc() {
 
   // Seg fault means This object is GCED!!!!!!
   // printf("%s\n", str->data.v_string);
+
+  object_t *x = new_int(1);
+  object_t *y = new_int(2);
+  object_t *z = new_int(3);
+  object_t *vec = new_vector3(x, y, z);
+
+  assert(x->ref_count == 2);
+  assert(y->ref_count == 2);
+  assert(z->ref_count == 2);
+
+  ref_count_decr(x);
+  assert(x->ref_count == 1);
 }

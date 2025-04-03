@@ -141,6 +141,11 @@ object_t *new_vector3(object_t *x, object_t *y, object_t *z) {
   object_t *obj = _create_object();
   obj->type = VECTOR3;
   obj->data.v_vector3 = (vector_t){.x = x, .y = y, .z = z};
+
+  ref_count_incr(x);
+  ref_count_incr(y);
+  ref_count_incr(z);
+
   return obj;
 }
 
