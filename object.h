@@ -20,8 +20,6 @@ typedef struct Vector {
   object_t *z;
 } vector_t;
 
-// TODO: Make a dictionay or a set tooo
-
 typedef union ObjectData {
   int v_int;
   float v_float;

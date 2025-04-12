@@ -14,13 +14,13 @@ void vm_frame_push(vm_t *vm, frame_t *frame) {
 frame_t *vm_new_frame(vm_t *vm) {
   frame_t *frame = malloc(sizeof(frame_t));
   if (frame == NULL) {
-    fprintf(stderr, "FAILED TO INITIALIZE FRAME");
+    fprintf(stderr, "FAILED TO INITIALIZE FRAME\n");
     return NULL;
   }
 
   frame->references = new_stack(8);
   if (frame->references == NULL) {
-    fprintf(stderr, "FAILED TO INITIALIZE VM FRAME");
+    fprintf(stderr, "FAILED TO INITIALIZE VM FRAME\n");
     free(frame);
     return NULL;
   }
@@ -32,7 +32,7 @@ frame_t *vm_new_frame(vm_t *vm) {
 
 void frame_free(frame_t *frame) {
   if (frame == NULL) {
-    fprintf(stderr, "STACK FRMAE IS ALREADY NULL");
+    fprintf(stderr, "STACK FRMAE IS ALREADY NULL\n");
   }
 
   free_stack(frame->references);
@@ -43,19 +43,19 @@ void frame_free(frame_t *frame) {
 vm_t *new_vm() {
   vm_t *vm = malloc(sizeof(vm_t));
   if (vm == NULL) {
-    fprintf(stderr, "FAILED TO INITIALIZE VM OBJECT");
+    fprintf(stderr, "FAILED TO INITIALIZE VM OBJECT\n");
     return NULL;
   }
 
   vm->frames = new_stack(8);
   if (vm->frames == NULL) {
-    fprintf(stderr, "FAILED TO INITIALIZE VM FRAMES STACK");
+    fprintf(stderr, "FAILED TO INITIALIZE VM FRAMES STACK\n");
     return NULL;
   }
 
   vm->objects = new_stack(8);
   if (vm->objects == NULL) {
-    fprintf(stderr, "FAILED TO INITIALIZE VM OBJECTS STACK");
+    fprintf(stderr, "FAILED TO INITIALIZE VM OBJECTS STACK\n");
     return NULL;
   }
 
@@ -64,7 +64,7 @@ vm_t *new_vm() {
 
 void free_vm(vm_t *vm) {
   if (vm == NULL) {
-    fprintf(stderr, "STACK VM IS ALREADY NULL");
+    fprintf(stderr, "STACK VM IS ALREADY NULL\n");
     return;
   }
 
