@@ -1,4 +1,5 @@
 #include "vm.h"
+#include "mark_object.h"
 #include "stack.h"
 #include <stdio.h>
 #include <stdlib.h>
@@ -55,16 +56,7 @@ vm_t *new_vm() {
   }
 
   vm->frames = new_stack(8);
-  if (vm->frames == NULL) {
-    fprintf(stderr, "FAILED TO INITIALIZE VM FRAMES STACK\n");
-    return NULL;
-  }
-
   vm->objects = new_stack(8);
-  if (vm->objects == NULL) {
-    fprintf(stderr, "FAILED TO INITIALIZE VM OBJECTS STACK\n");
-    return NULL;
-  }
 
   return vm;
 }
@@ -78,6 +70,11 @@ void free_vm(vm_t *vm) {
   // free each and every frame in the stack
   for (int i = 0; i < vm->frames->ptr; i++) {
     frame_free(vm->frames->data[i]);
+  }
+  free_stack(vm->frames);
+
+  for (int i = 0; i < vm->objects->ptr; i++) {
+    mark_object_free(vm->objects->data[i]);
   }
   free_stack(vm->objects);
 

@@ -14,8 +14,8 @@ void mark_sweep() {
 
   // the object in the vm is infact our object
   assert(vm->objects->data[0] == obj);
+  assert(vm->objects->ptr == 1);
 
-  free(obj);
   free_vm(vm);
 
   // this is causing segfault so this means free vm is fine
