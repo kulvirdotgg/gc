@@ -4,18 +4,19 @@
 #include <stdlib.h>
 #include <string.h>
 
-mark_t *_create_object() {
+mark_t *_create_object(vm_t *vm) {
   mark_t *obj = malloc(sizeof(mark_t));
   if (obj == NULL) {
     fprintf(stderr, "FAILED TO CREATE NEW MARK OBJECT\n");
     return NULL;
   }
 
+  track_object(vm, obj);
   return obj;
 }
 
 mark_t *new_array(vm_t *vm, size_t capacity) {
-  mark_t *obj = _create_object();
+  mark_t *obj = _create_object(vm);
   obj->type = ARRAY;
 
   mark_t **data = calloc(capacity, sizeof(mark_t *));
@@ -38,7 +39,7 @@ mark_t *new_vector3(vm_t *vm, mark_t *x, mark_t *y, mark_t *z) {
     return NULL;
   }
 
-  mark_t *obj = _create_object();
+  mark_t *obj = _create_object(vm);
   obj->type = VECTOR3;
   obj->data.v_vector3 = (mark_vector_t){.x = x, .y = y, .z = z};
 
@@ -46,21 +47,21 @@ mark_t *new_vector3(vm_t *vm, mark_t *x, mark_t *y, mark_t *z) {
 }
 
 mark_t *new_int(vm_t *vm, int value) {
-  mark_t *obj = _create_object();
+  mark_t *obj = _create_object(vm);
   obj->type = INT;
   obj->data.v_int = value;
   return obj;
 }
 
 mark_t *new_float(vm_t *vm, float value) {
-  mark_t *obj = _create_object();
+  mark_t *obj = _create_object(vm);
   obj->type = FLOAT;
   obj->data.v_float = value;
   return obj;
 }
 
 mark_t *new_string(vm_t *vm, char *value) {
-  mark_t *obj = _create_object();
+  mark_t *obj = _create_object(vm);
   obj->type = STRING;
 
   obj->data.v_string = (char *)malloc(strlen(value) + 1);

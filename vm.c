@@ -3,6 +3,13 @@
 #include <stdio.h>
 #include <stdlib.h>
 
+void track_object(vm_t *vm, mark_t *obj) {
+  if (vm == NULL || obj == NULL) {
+    fprintf(stderr, "MARK OBJECTS ARE NULL\n");
+  }
+  push(vm->objects, (void *)obj);
+}
+
 void vm_frame_push(vm_t *vm, frame_t *frame) {
   if (vm == NULL || frame == NULL) {
     return;
