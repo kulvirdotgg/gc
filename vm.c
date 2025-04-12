@@ -11,6 +11,14 @@ void track_object(vm_t *vm, mark_t *obj) {
   push(vm->objects, (void *)obj);
 }
 
+void frame_ref_object(frame_t *frame, mark_t *obj) {
+  if (frame == NULL || obj == NULL) {
+    fprintf(stderr, "FRAME OR OBJECT TRYING TO REFERENCE IS NULL");
+  }
+
+  push(frame->references, obj);
+}
+
 void vm_frame_push(vm_t *vm, frame_t *frame) {
   if (vm == NULL || frame == NULL) {
     return;

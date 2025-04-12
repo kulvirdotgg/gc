@@ -19,3 +19,4 @@ frame_t *vm_new_frame(vm_t *vm);
 void frame_free(frame_t *frame);
 
 void track_object(vm_t *vm, mark_t *obj);
+void frame_ref_object(frame_t *frame, mark_t *obj);
