@@ -1,4 +1,5 @@
 #pragma once
+#include "mark_object.h"
 #include "stack.h"
 
 typedef struct VirtualMachine {
@@ -16,3 +17,5 @@ void free_vm(vm_t *vm);
 void vm_frame_push(vm_t *vm, frame_t *frame);
 frame_t *vm_new_frame(vm_t *vm);
 void frame_free(frame_t *frame);
+
+void track_object(vm_t *vm, mark_t *obj);

@@ -1,6 +1,5 @@
 #pragma once
 #include "stack.h"
-#include "vm.h"
 #include <stdbool.h>
 #include <stdio.h>
 #include <stdlib.h>
@@ -37,9 +36,3 @@ typedef struct Object {
   mark_type_t type;
   mark_data_t data;
 } mark_t;
-
-mark_t *new_int(vm_t *vm, int value);
-mark_t *new_float(vm_t *vm, float value);
-mark_t *new_string(vm_t *vm, char *value);
-mark_t *new_vector3(vm_t *vm, mark_t *x, mark_t *y, mark_t *z);
-mark_t *new_array(vm_t *vm, size_t capacity);
