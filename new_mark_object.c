@@ -13,6 +13,8 @@ mark_t *_create_object(vm_t *vm) {
   }
 
   track_object(vm, obj);
+  // marking will be done at `mark_and_sweep` phase only.
+  obj->is_marked = false;
   return obj;
 }
 

@@ -4,6 +4,93 @@
 #include <stdio.h>
 #include <stdlib.h>
 
+void mark(vm_t *vm) {
+  if (vm == NULL) {
+    fprintf(stderr, "VM IS NULL CANNOT MARK\n");
+    return;
+  }
+
+  for (int i = 0; i < vm->frames->ptr; i++) {
+    frame_t *frame = vm->frames->data[i];
+    for (int j = 0; j < frame->references->ptr; j++) {
+      // this is necessary because data is of type (void **)
+      // so we need to type cast it to mark object type.
+      mark_t *obj = frame->references->data[j];
+      obj->is_marked = true;
+    }
+  }
+}
+
+void trace(vm_t *vm) {
+  if (vm == NULL) {
+    fprintf(stderr, "VM IS NULL CANNOT TRACE\n");
+    return;
+  }
+
+  stack_tt *gray_objects = new_stack(8);
+  if (gray_objects == NULL) {
+    fprintf(stderr, "gray objects stack couldn't be initialized\n");
+  }
+
+  for (int i = 0; i < vm->objects->ptr; ++i) {
+    mark_t *obj = vm->objects->data[i];
+    if (obj && obj->is_marked) {
+      push(gray_objects, obj);
+    }
+  }
+
+  while (gray_objects->ptr > 0) {
+    mark_t *obj = pop(gray_objects);
+    trace_blacken_object(gray_objects, obj);
+  }
+
+  free_stack(gray_objects);
+}
+
+void trace_blacken_object(stack_tt *gray_objects, mark_t *obj) {
+  if (obj == NULL) {
+    fprintf(stderr, "VM IS NULL CANNOT TRACE\n");
+    return;
+  }
+
+  switch (obj->type) {
+  case INT:
+    return;
+  case FLOAT:
+    return;
+  case STRING:
+    return;
+  case VECTOR3: {
+    trace_mark_object(gray_objects, obj->data.v_vector3.x);
+    trace_mark_object(gray_objects, obj->data.v_vector3.y);
+    trace_mark_object(gray_objects, obj->data.v_vector3.z);
+    break;
+  }
+  case ARRAY: {
+    mark_array_t arr = obj->data.v_array;
+    for (int i = 0; i < arr.capacity; ++i) {
+      trace_mark_object(gray_objects, mark_arr_get(obj, i));
+    }
+    break;
+  }
+  }
+}
+
+void trace_mark_object(stack_tt *gray_objects, mark_t *obj) {
+  if (obj == NULL) {
+    fprintf(stderr, "OBJECT IS NULL CANNOT TRACE\n");
+    return;
+  }
+
+  if (obj->is_marked) {
+    // do not try to mark already marked objects because save CPU time.
+    return;
+  }
+
+  obj->is_marked = true;
+  push(gray_objects, (void *)obj);
+}
+
 void track_object(vm_t *vm, mark_t *obj) {
   if (vm == NULL || obj == NULL) {
     fprintf(stderr, "MARK OBJECTS ARE NULL\n");
@@ -11,9 +98,10 @@ void track_object(vm_t *vm, mark_t *obj) {
   push(vm->objects, (void *)obj);
 }
 
+// add reference of an object inside the frame.
 void frame_ref_object(frame_t *frame, mark_t *obj) {
   if (frame == NULL || obj == NULL) {
-    fprintf(stderr, "FRAME OR OBJECT TRYING TO REFERENCE IS NULL");
+    fprintf(stderr, "FRAME OR OBJECT TRYING TO REFERENCE IS NULL\n");
   }
 
   push(frame->references, obj);
@@ -48,7 +136,7 @@ frame_t *vm_new_frame(vm_t *vm) {
 
 void frame_free(frame_t *frame) {
   if (frame == NULL) {
-    fprintf(stderr, "STACK FRMAE IS ALREADY NULL\n");
+    fprintf(stderr, "STACK FRAME IS ALREADY NULL\n");
   }
 
   free_stack(frame->references);

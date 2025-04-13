@@ -8,8 +8,6 @@ typedef struct Object mark_t;
 
 typedef enum ObjectType { INT, FLOAT, STRING, ARRAY, VECTOR3 } mark_type_t;
 
-void mark_object_free(mark_t *obj);
-
 typedef struct Array {
   size_t capacity;
   mark_t **data;
@@ -31,8 +29,13 @@ typedef union ObjectData {
 } mark_data_t;
 
 typedef struct Object {
-  bool isMarked;
+  bool is_marked;
 
   mark_type_t type;
   mark_data_t data;
 } mark_t;
+
+void mark_object_free(mark_t *obj);
+
+bool mark_arr_set(mark_t *array, size_t index, mark_t *value);
+mark_t *mark_arr_get(mark_t *array, size_t index);
