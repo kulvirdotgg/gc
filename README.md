@@ -38,5 +38,5 @@ void markAndSweep() {
 
 - It has sophisticated implementation and requires a graph traversal.
 - Since this algorithm run and check for all elements there may be times when CPU is allocated to only garbage collect elements and our program execution might be stopped.
-- Since GC is activated when system is running low on memory, mark and sweep algorihm might use recursive graph traversal technique which is not good.
+- Since GC is activated when system is running low on memory, mark and sweep algorithm uses memory itself which is quite ironic KEKW.
 - It has less predictable performance because GC can be triggered anytime and it will `stop the world` to garbage collect.

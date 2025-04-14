@@ -4,6 +4,34 @@
 #include <stdio.h>
 #include <stdlib.h>
 
+void vm_collect_garbage(vm_t *vm) {
+  mark(vm);
+  trace(vm);
+  sweep(vm);
+}
+
+void sweep(vm_t *vm) {
+  if (vm == NULL) {
+    fprintf(stderr, "VM is already null cannot sweep");
+  }
+
+  for (int i = 0; i < vm->objects->ptr; i++) {
+    mark_t *obj = vm->objects->data[i];
+
+    // if object is marked we want to reset the mark thing
+    // so that in next mark_sweep phase it gets evaluated correctly
+    // otherwise it will be marked always and won't be gc'ed.
+    if (obj->is_marked) {
+      obj->is_marked = false;
+      continue;
+    }
+
+    mark_object_free(obj);
+    vm->objects->data[i] = NULL;
+  }
+  stack_remove_nulls(vm->objects);
+}
+
 void mark(vm_t *vm) {
   if (vm == NULL) {
     fprintf(stderr, "VM IS NULL CANNOT MARK\n");

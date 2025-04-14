@@ -58,3 +58,22 @@ void free_stack(stack_tt *stack) {
 
   free(stack);
 }
+
+void stack_remove_nulls(stack_tt *stack) {
+  size_t insert_ptr = 0;
+
+  // Iterate through the stack and compact non-NULL pointers.
+  for (size_t i = 0; i < stack->ptr; ++i) {
+    if (stack->data[i] != NULL) {
+      stack->data[insert_ptr++] = stack->data[i];
+    }
+  }
+
+  // Update the count to reflect the new number of elements.
+  stack->ptr = insert_ptr;
+
+  // Optionally, you might want to zero out the remaining slots.
+  for (size_t i = insert_ptr; i < stack->capacity; ++i) {
+    stack->data[i] = NULL;
+  }
+}

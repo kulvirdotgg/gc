@@ -30,3 +30,4 @@ void trace_blacken_object(stack_tt *gray_objects, mark_t *ref);
 void trace_mark_object(stack_tt *gray_objects, mark_t *ref);
 
 void vm_collect_garbage(vm_t *vm);
+void sweep(vm_t *vm);
